@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirWatch - Real-time Air Quality Monitor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Red+Hat+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="Script.js"></script>
+    <div class="app-container">
+        <!-- Background Effects -->
+        <div class="bg-grid"></div>
+        <div class="bg-gradient"></div>
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+                        <path d="M2 17L12 22L22 17"/>
+                        <path d="M2 12L12 17L22 12"/>
+                    </svg>
+                </div>
+                <span class="logo-text">AirWatch</span>
+            </div>
+            <div class="header-subtitle">Real-time Air Quality Intelligence</div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-container">
+                    <div class="search-label">Enter Your Location</div>
+                    <div class="search-box">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 5.02944 7.02944 1 12 1C16.9706 1 21 5.02944 21 10Z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <input 
+                            type="text" 
+                            id="locationInput" 
+                            placeholder="City name or coordinates (lat, lon)"
+                            autocomplete="off"
+                        >
+                        <button id="searchBtn" class="search-btn">
+                            <span>Analyze</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12H19M19 12L12 5M19 12L12 19"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <button id="geoBtn" class="geo-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="4"/>
+                            <path d="M12 2V6M12 18V22M22 12H18M6 12H2"/>
+                        </svg>
+                        <span>Use My Location</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="results-section hidden">
+                <div class="results-header">
+                    <div class="location-info">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 5.02944 7.02944 1 12 1C16.9706 1 21 5.02944 21 10Z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <div>
+                            <div id="cityName" class="city-name">--</div>
+                            <div id="coordinates" class="coordinates">--</div>
+                        </div>
+                    </div>
+                    <div id="timestamp" class="timestamp">--</div>
+                </div>
+
+                <!-- AQI Card -->
+                <div class="aqi-card">
+                    <div class="aqi-label">Air Quality Index</div>
+                    <div class="aqi-display">
+                        <div id="aqiValue" class="aqi-value">--</div>
+                        <div id="aqiCategory" class="aqi-category">--</div>
+                    </div>
+                    <div id="aqiBar" class="aqi-bar">
+                        <div id="aqiIndicator" class="aqi-indicator"></div>
+                    </div>
+                    <div class="aqi-scale">
+                        <div class="scale-item" data-level="1">
+                            <div class="scale-color"></div>
+                            <div class="scale-label">Good</div>
+                        </div>
+                        <div class="scale-item" data-level="2">
+                            <div class="scale-color"></div>
+                            <div class="scale-label">Fair</div>
+                        </div>
+                        <div class="scale-item" data-level="3">
+                            <div class="scale-color"></div>
+                            <div class="scale-label">Moderate</div>
+                        </div>
+                        <div class="scale-item" data-level="4">
+                            <div class="scale-color"></div>
+                            <div class="scale-label">Poor</div>
+                        </div>
+                        <div class="scale-item" data-level="5">
+                            <div class="scale-color"></div>
+                            <div class="scale-label">Very Poor</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pollutants Grid -->
+                <div class="pollutants-grid">
+                    <div class="pollutant-card" id="so2Card">
+                        <div class="pollutant-header">
+                            <div class="pollutant-icon">SO₂</div>
+                            <div class="pollutant-status" id="so2Status">--</div>
+                        </div>
+                        <div class="pollutant-value" id="so2Value">--</div>
+                        <div class="pollutant-label">Sulfur Dioxide</div>
+                        <div class="pollutant-bar">
+                            <div class="pollutant-fill" id="so2Fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="pollutant-card" id="no2Card">
+                        <div class="pollutant-header">
+                            <div class="pollutant-icon">NO₂</div>
+                            <div class="pollutant-status" id="no2Status">--</div>
+                        </div>
+                        <div class="pollutant-value" id="no2Value">--</div>
+                        <div class="pollutant-label">Nitrogen Dioxide</div>
+                        <div class="pollutant-bar">
+                            <div class="pollutant-fill" id="no2Fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="pollutant-card" id="pm10Card">
+                        <div class="pollutant-header">
+                            <div class="pollutant-icon">PM₁₀</div>
+                            <div class="pollutant-status" id="pm10Status">--</div>
+                        </div>
+                        <div class="pollutant-value" id="pm10Value">--</div>
+                        <div class="pollutant-label">Particulate Matter 10</div>
+                        <div class="pollutant-bar">
+                            <div class="pollutant-fill" id="pm10Fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="pollutant-card" id="pm25Card">
+                        <div class="pollutant-header">
+                            <div class="pollutant-icon">PM₂.₅</div>
+                            <div class="pollutant-status" id="pm25Status">--</div>
+                        </div>
+                        <div class="pollutant-value" id="pm25Value">--</div>
+                        <div class="pollutant-label">Particulate Matter 2.5</div>
+                        <div class="pollutant-bar">
+                            <div class="pollutant-fill" id="pm25Fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="pollutant-card" id="o3Card">
+                        <div class="pollutant-header">
+                            <div class="pollutant-icon">O₃</div>
+                            <div class="pollutant-status" id="o3Status">--</div>
+                        </div>
+                        <div class="pollutant-value" id="o3Value">--</div>
+                        <div class="pollutant-label">Ozone</div>
+                        <div class="pollutant-bar">
+                            <div class="pollutant-fill" id="o3Fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="pollutant-card" id="coCard">
+                        <div class="pollutant-header">
+                            <div class="pollutant-icon">CO</div>
+                            <div class="pollutant-status" id="coStatus">--</div>
+                        </div>
+                        <div class="pollutant-value" id="coValue">--</div>
+                        <div class="pollutant-label">Carbon Monoxide</div>
+                        <div class="pollutant-bar">
+                            <div class="pollutant-fill" id="coFill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Recommendations -->
+                <div id="healthCard" class="health-card">
+                    <div class="health-header">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                        <h3>Health Recommendations</h3>
+                    </div>
+                    <div id="healthMessage" class="health-message">--</div>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state hidden">
+                <div class="loader">
+                    <div class="loader-ring"></div>
+                    <div class="loader-ring"></div>
+                    <div class="loader-ring"></div>
+                </div>
+                <div class="loading-text">Analyzing air quality data...</div>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="error-state hidden">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v4M12 16h.01"/>
+                </svg>
+                <div class="error-title">Unable to Fetch Data</div>
+                <div id="errorMessage" class="error-message">--</div>
+                <button id="retryBtn" class="retry-btn">Try Again</button>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    Data provided by OpenWeatherMap API
+                </div>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">About</a>
+                    <span class="separator">•</span>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <span class="separator">•</span>
+                    <a href="#" class="footer-link">API</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="Script.js"></script>
+</body>
+</html>
